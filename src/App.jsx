@@ -45,16 +45,36 @@ function App() {
   };
 
   const handleTileMove = (sourceIndex, targetIndex) => {
-    // Aktif oyuncunun taşlarını kopyalayalım
+    // Eğer taş aynı yere bırakılıyorsa hiçbir şey yapma
+    if (sourceIndex === targetIndex) {
+      return;
+    }
+
+    // Aktif oyuncunun taşlarını kopyala
     const currentPlayerTiles = [...playerTiles[currentPlayer]];
 
-    // Hedef konumda taş varsa, taşları yer değiştir
-    const sourceTile = currentPlayerTiles[sourceIndex];
-    const targetTile = currentPlayerTiles[targetIndex];
+    // Sürüklenen taşı al ve eski konumunu temizle
+    const movedTile = { ...currentPlayerTiles[sourceIndex] };
+    currentPlayerTiles[sourceIndex] = null;
 
-    // Taşları yer değiştir
-    currentPlayerTiles[sourceIndex] = targetTile;
-    currentPlayerTiles[targetIndex] = sourceTile;
+    // Hedef konumda taş var mı kontrol et
+    if (currentPlayerTiles[targetIndex]) {
+      // Hedef konumda taş varsa, o noktadan itibaren bir boşluk oluştur
+      if (sourceIndex < targetIndex) {
+        // Sağa kaydırma: Hedef noktadan bir önceki pozisyona kadar taşları kaydır
+        for (let i = sourceIndex; i < targetIndex; i++) {
+          currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
+        }
+      } else {
+        // Sola kaydırma: Hedef noktadan bir sonraki pozisyona kadar taşları kaydır
+        for (let i = sourceIndex; i > targetIndex; i--) {
+          currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
+        }
+      }
+    }
+
+    // Sürüklenen taşı hedef konuma yerleştir
+    currentPlayerTiles[targetIndex] = movedTile;
 
     // State'i güncelle
     const newPlayerTiles = [...playerTiles];
