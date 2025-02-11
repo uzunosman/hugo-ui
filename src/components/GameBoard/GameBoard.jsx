@@ -9,7 +9,9 @@ const GameBoard = ({
     currentPlayer,
     playerTiles,
     onTileClick,
-    onTileMove
+    onTileMove,
+    onSeriesSelect,
+    selectedSeries
 }) => {
     const [timeLeft, setTimeLeft] = useState(60);
 
@@ -67,6 +69,8 @@ const GameBoard = ({
                 tiles={playerTiles[currentPlayer]}
                 onTileClick={(tileIndex) => onTileClick(currentPlayer, tileIndex)}
                 onTileMove={onTileMove}
+                onSeriesSelect={onSeriesSelect}
+                selectedSeries={selectedSeries}
             />
         </>
     );
