@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import Tile from '../Tile/Tile';
 import '../../assets/css/components/TileHolder.css';
 
-const TileHolder = ({ tiles, onTileClick, onTileMove, onSeriesSelect, selectedSeries }) => {
+const TileHolder = ({ tiles, onTileClick, onTileMove }) => {
     const firstRowRef = useRef(null);
     const secondRowRef = useRef(null);
 
@@ -50,7 +50,7 @@ const TileHolder = ({ tiles, onTileClick, onTileMove, onSeriesSelect, selectedSe
                 }
 
                 // Taşı hareket ettir
-                onTileMove(tileData.sourceIndex, targetIndex, tileData.isSeriesMove);
+                onTileMove(tileData.sourceIndex, targetIndex);
             }
         } catch (error) {
             console.error('Taş taşıma sırasında hata:', error);
@@ -73,8 +73,6 @@ const TileHolder = ({ tiles, onTileClick, onTileMove, onSeriesSelect, selectedSe
                         value={rowTiles[index].value}
                         color={rowTiles[index].color}
                         onClick={() => onTileClick(startIndex + index)}
-                        onSeriesSelect={onSeriesSelect}
-                        isPartOfSeries={selectedSeries?.includes(startIndex + index)}
                     />
                 )}
             </div>

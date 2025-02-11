@@ -5,9 +5,11 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
 ## Özellikler
 
 ### Oyun Tahtası
-- Sabit boyutlu oyun alanı (1200x800px)
+- Sabit boyutlu oyun alanı (720x720px)
 - Turkuaz renkli arka plan (#0097b2)
 - Merkezi konumlandırılmış oyun tahtası
+- Hafif saydam siyah arka plan (0.1 opaklık)
+- Yuvarlatılmış köşeler (8px)
 
 ### Oyuncu Panelleri
 - 4 oyuncu için panel gösterimi
@@ -31,12 +33,12 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
 ### Taş Tutucusu
 - Turuncu/sarı gradient arka plan
 - İki sıra halinde taş dizilimi
-- Her sırada 7 taş kapasitesi
+- Her sırada 15 taş kapasitesi
 - Sıralar arası ayırıcı çizgi
 - Ekranın alt kısmında sabit konum
 
 ### Taşlar
-- Boyut: 25x36px
+- Boyut: 40x60px
 - Renkler:
   - Kırmızı (#FF0000)
   - Siyah (#000000)
@@ -46,6 +48,16 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
 - Kapalı taşlar için:
   - Gri daire içinde "48" gösterimi
   - Nokta göstergesi yok
+
+### Sürükleme ve Bırakma Özellikleri
+- Taşları sürükleyip bırakma desteği
+- Sürükleme başladığında mouse taşın merkezinde konumlanır
+- Taşa tıklandığında mouse otomatik olarak merkeze gelir
+- Akıllı taş yerleştirme sistemi:
+  - Hedef konumda taş varsa otomatik kaydırma
+  - Tercih edilen yönde boşluk yoksa alternatif yöne kaydırma
+  - Sağa/sola kaydırma için dinamik boşluk bulma
+  - Taşların kaybolmasını önleyen güvenlik kontrolleri
 
 ### Orta Alan
 - İki taş gösterimi
@@ -57,6 +69,8 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
 
 ### CSS Yapısı
 - Global stiller: `global.css`
+  - CSS değişkenleri ile merkezi yönetim
+  - Oyun boyutu (--game-size: 720px)
 - Component-bazlı CSS dosyaları:
   - `GameBoard.css`
   - `PlayerPanel.css`
@@ -64,9 +78,10 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
   - `CenterTile.css`
   - `CenterArea.css`
 
-### Responsive Tasarım
+### Sabit Boyut
+- Oyun alanı: 720x720px
 - Responsive özellikler kaldırıldı
-- Sabit genişlik ve yükseklik değerleri
+- CSS değişkenleri ile kolay boyut yönetimi
 - Ekran boyutundan bağımsız sabit konumlandırmalar
 
 ### Component Yapısı
