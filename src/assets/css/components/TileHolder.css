@@ -8,6 +8,7 @@
     align-items: center;
     width: 100%;
     padding: 10px 0;
+    z-index: 100;
 }
 
 .tile-holder {

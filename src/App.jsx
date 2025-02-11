@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import GameBoard from './components/GameBoard/GameBoard';
 import './assets/css/global.css';
 
+// Rastgele taş oluşturma fonksiyonu
+const generateRandomTile = () => {
+  const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+  const colors = ['red', 'black', 'blue', 'yellow'];
+
+  return {
+    value: numbers[Math.floor(Math.random() * numbers.length)],
+    color: colors[Math.floor(Math.random() * colors.length)]
+  };
+};
+
+// 14 taşlık bir set oluşturma
+const generateTileSet = () => {
+  return Array(14).fill(null).map(() => generateRandomTile());
+};
+
 function App() {
   const [players] = useState([
     { name: '3. Oyuncu', score: 0 },
@@ -13,19 +29,10 @@ function App() {
   const [currentPlayer] = useState(2); // 1. Oyuncu
 
   const [playerTiles] = useState([
-    Array(14).fill({ value: '13', color: 'red' }),
-    Array(14).fill({ value: '13', color: 'black' }),
-    [
-      { value: '13', color: 'red' },
-      { value: '13', color: 'yellow' },
-      { value: '13', color: 'blue' },
-      { value: '13', color: 'black' },
-      { value: '3', color: 'yellow' },
-      { value: '3', color: 'blue' },
-      { value: '3', color: 'black' },
-      ...Array(7).fill({ value: '', color: 'black' })
-    ],
-    Array(14).fill({ value: '13', color: 'black' })
+    generateTileSet(), // 3. Oyuncu
+    generateTileSet(), // 2. Oyuncu
+    generateTileSet(), // 1. Oyuncu (Aktif)
+    generateTileSet()  // 4. Oyuncu
   ]);
 
   const handleTileClick = (playerIndex, tileIndex) => {
