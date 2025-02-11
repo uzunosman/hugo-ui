@@ -18,15 +18,46 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    min-width: calc((45px * 14) + (1px * 13));
+    min-width: calc((41px * 15) + (1px * 14));
 }
 
 .tile-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(15, 41px);
     gap: 1px;
     min-height: 65px;
     align-items: center;
     padding: 1px;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.tile-cell {
+    width: 41px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.tile-cell.drag-over {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.drop-indicator {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    transition: left 0.15s ease-out;
+    border-radius: 2px;
 }
 
 .tile-row-divider {
@@ -35,4 +66,8 @@
     background: #d4975f;
     margin: 1px 0;
     border: none;
+}
+
+.tile-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }

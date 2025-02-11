@@ -8,7 +8,8 @@ const GameBoard = ({
     players,
     currentPlayer,
     playerTiles,
-    onTileClick
+    onTileClick,
+    onTileMove
 }) => {
     const [timeLeft, setTimeLeft] = useState(60);
 
@@ -65,6 +66,7 @@ const GameBoard = ({
             <TileHolder
                 tiles={playerTiles[currentPlayer]}
                 onTileClick={(tileIndex) => onTileClick(currentPlayer, tileIndex)}
+                onTileMove={onTileMove}
             />
         </>
     );

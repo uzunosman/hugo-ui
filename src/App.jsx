@@ -15,7 +15,12 @@ const generateRandomTile = () => {
 
 // 14 taşlık bir set oluşturma
 const generateTileSet = () => {
-  return Array(14).fill(null).map(() => generateRandomTile());
+  const tiles = Array(30).fill(null);
+  // Her oyuncu için sadece ilk 14 taşı doldur
+  for (let i = 0; i < 14; i++) {
+    tiles[i] = generateRandomTile();
+  }
+  return tiles;
 };
 
 function App() {
@@ -28,7 +33,7 @@ function App() {
 
   const [currentPlayer] = useState(2); // 1. Oyuncu
 
-  const [playerTiles] = useState([
+  const [playerTiles, setPlayerTiles] = useState([
     generateTileSet(), // 3. Oyuncu
     generateTileSet(), // 2. Oyuncu
     generateTileSet(), // 1. Oyuncu (Aktif)
@@ -37,6 +42,24 @@ function App() {
 
   const handleTileClick = (playerIndex, tileIndex) => {
     console.log(`Player ${playerIndex} clicked tile ${tileIndex}`);
+  };
+
+  const handleTileMove = (sourceIndex, targetIndex) => {
+    // Aktif oyuncunun taşlarını kopyalayalım
+    const currentPlayerTiles = [...playerTiles[currentPlayer]];
+
+    // Hedef konumda taş varsa, taşları yer değiştir
+    const sourceTile = currentPlayerTiles[sourceIndex];
+    const targetTile = currentPlayerTiles[targetIndex];
+
+    // Taşları yer değiştir
+    currentPlayerTiles[sourceIndex] = targetTile;
+    currentPlayerTiles[targetIndex] = sourceTile;
+
+    // State'i güncelle
+    const newPlayerTiles = [...playerTiles];
+    newPlayerTiles[currentPlayer] = currentPlayerTiles;
+    setPlayerTiles(newPlayerTiles);
   };
 
   console.log('Rendering App with:', { players, currentPlayer, playerTiles });
@@ -48,6 +71,7 @@ function App() {
         currentPlayer={currentPlayer}
         playerTiles={playerTiles}
         onTileClick={handleTileClick}
+        onTileMove={handleTileMove}
       />
     </div>
   );
