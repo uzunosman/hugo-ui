@@ -59,16 +59,25 @@ function App() {
 
     // Hedef konumda taş var mı kontrol et
     if (currentPlayerTiles[targetIndex]) {
+
       // Hedef konumda taş varsa, o noktadan itibaren bir boşluk oluştur
       if (sourceIndex < targetIndex) {
         // Sağa kaydırma: Hedef noktadan bir önceki pozisyona kadar taşları kaydır
-        for (let i = sourceIndex; i < targetIndex; i++) {
-          currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
+        let emptyIndex = targetIndex;
+        while (emptyIndex < currentPlayerTiles.length && currentPlayerTiles[emptyIndex]) {
+          emptyIndex++;
+        }
+        for (let i = emptyIndex; i > targetIndex; i--) {
+          currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
         }
       } else {
         // Sola kaydırma: Hedef noktadan bir sonraki pozisyona kadar taşları kaydır
-        for (let i = sourceIndex; i > targetIndex; i--) {
-          currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
+        let emptyIndex = targetIndex;
+        while (emptyIndex >= 0 && currentPlayerTiles[emptyIndex]) {
+          emptyIndex--;
+        }
+        for (let i = emptyIndex; i < targetIndex; i++) {
+          currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
         }
       }
     }
