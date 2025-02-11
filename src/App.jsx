@@ -59,25 +59,56 @@ function App() {
 
     // Hedef konumda taş var mı kontrol et
     if (currentPlayerTiles[targetIndex]) {
-
-      // Hedef konumda taş varsa, o noktadan itibaren bir boşluk oluştur
+      // İlk önce tercih edilen yönde kaydırmayı dene
       if (sourceIndex < targetIndex) {
-        // Sağa kaydırma: Hedef noktadan bir önceki pozisyona kadar taşları kaydır
+        // Sağa kaydırmayı dene
         let emptyIndex = targetIndex;
         while (emptyIndex < currentPlayerTiles.length && currentPlayerTiles[emptyIndex]) {
           emptyIndex++;
         }
-        for (let i = emptyIndex; i > targetIndex; i--) {
-          currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
+
+        // Sağa kaydırma mümkün değilse, sola kaydır
+        if (emptyIndex >= currentPlayerTiles.length) {
+          emptyIndex = targetIndex;
+          while (emptyIndex >= 0 && currentPlayerTiles[emptyIndex]) {
+            emptyIndex--;
+          }
+          // Sola kaydırma yap
+          if (emptyIndex >= 0) {
+            for (let i = emptyIndex; i < targetIndex; i++) {
+              currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
+            }
+          }
+        } else {
+          // Sağa kaydırma yap
+          for (let i = emptyIndex; i > targetIndex; i--) {
+            currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
+          }
         }
       } else {
-        // Sola kaydırma: Hedef noktadan bir sonraki pozisyona kadar taşları kaydır
+        // Sola kaydırmayı dene
         let emptyIndex = targetIndex;
         while (emptyIndex >= 0 && currentPlayerTiles[emptyIndex]) {
           emptyIndex--;
         }
-        for (let i = emptyIndex; i < targetIndex; i++) {
-          currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
+
+        // Sola kaydırma mümkün değilse, sağa kaydır
+        if (emptyIndex < 0) {
+          emptyIndex = targetIndex;
+          while (emptyIndex < currentPlayerTiles.length && currentPlayerTiles[emptyIndex]) {
+            emptyIndex++;
+          }
+          // Sağa kaydırma yap
+          if (emptyIndex < currentPlayerTiles.length) {
+            for (let i = emptyIndex; i > targetIndex; i--) {
+              currentPlayerTiles[i] = currentPlayerTiles[i - 1] ? { ...currentPlayerTiles[i - 1] } : null;
+            }
+          }
+        } else {
+          // Sola kaydırma yap
+          for (let i = emptyIndex; i < targetIndex; i++) {
+            currentPlayerTiles[i] = currentPlayerTiles[i + 1] ? { ...currentPlayerTiles[i + 1] } : null;
+          }
         }
       }
     }
