@@ -1,0 +1,121 @@
+.player-panel {
+    width: 200px;
+    height: 30px;
+    background-color: var(--panel-bg);
+    border-radius: 0;
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    position: fixed;
+    gap: var(--spacing-md);
+}
+
+.player-panel .timer-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background-color: #4CAF50;
+    transition: all 1s linear;
+}
+
+.player-panel .timer-bar.warning {
+    background-color: #FF5252;
+}
+
+.player-panel.current-player {
+    position: fixed;
+    bottom: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(128, 128, 128, 0.9);
+    z-index: 10;
+}
+
+.player-panel.top {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-panel.right {
+    position: fixed;
+    right: 0;
+    top: 300px;
+    height: 200px;
+    width: 30px;
+    flex-direction: column;
+    padding: var(--spacing-md) 5px;
+}
+
+.player-panel.right .timer-bar {
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+}
+
+.player-panel.right .player-info {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    height: 100%;
+}
+
+.player-panel.bottom {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-panel.left {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 200px;
+    width: 30px;
+    flex-direction: column;
+    padding: var(--spacing-md) 5px;
+}
+
+.player-panel.left .timer-bar {
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+}
+
+.player-panel.left .player-info {
+    writing-mode: vertical-lr;
+    text-align: center;
+    height: 100%;
+}
+
+.player-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--tile-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player-panel.right .player-avatar,
+.player-panel.left .player-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin: var(--spacing-sm) 0;
+    background-color: var(--tile-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+}

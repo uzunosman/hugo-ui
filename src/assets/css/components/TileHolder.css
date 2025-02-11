@@ -1,0 +1,37 @@
+.tile-holder-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.tile-holder {
+    background: #ffbd59;
+    border-radius: 4px 4px 0 0;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: calc((45px * 14) + (1px * 13));
+}
+
+.tile-row {
+    display: flex;
+    gap: 1px;
+    min-height: 65px;
+    align-items: center;
+    padding: 1px;
+}
+
+.tile-row-divider {
+    width: 100%;
+    height: 1px;
+    background: #d4975f;
+    margin: 1px 0;
+    border: none;
+}

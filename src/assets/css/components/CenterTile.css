@@ -1,0 +1,81 @@
+.center-tile {
+    width: 25px;
+    height: 36px;
+    background-color: var(--tile-bg);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.center-tile:not(.closed)::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.center-tile.closed {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0;
+}
+
+.center-tile.closed::before {
+    content: '48';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    color: #666;
+    font-weight: bold;
+}
+
+.center-tile.red:not(.closed) {
+    color: #FF0000;
+}
+
+.center-tile.red:not(.closed)::after {
+    background-color: #FF0000;
+}
+
+.center-tile.black:not(.closed) {
+    color: #000000;
+}
+
+.center-tile.black:not(.closed)::after {
+    background-color: #000000;
+}
+
+.center-tile.blue:not(.closed) {
+    color: #00BCD4;
+}
+
+.center-tile.blue:not(.closed)::after {
+    background-color: #00BCD4;
+}
+
+.center-tile.yellow:not(.closed) {
+    color: #FFC107;
+}
+
+.center-tile.yellow:not(.closed)::after {
+    background-color: #FFC107;
+}
