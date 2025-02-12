@@ -115,3 +115,10 @@
     pointer-events: none;
     margin-left: var(--spacing-sm);
 }
+
+.center-tile.disabled,
+.draggable-tile.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

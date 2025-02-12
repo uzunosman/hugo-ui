@@ -82,6 +82,14 @@ function App() {
   // Oyun içindeki tur sayısı (her oyuncu sırasını tamamladığında artar)
   const [turnCount, setTurnCount] = useState(0);
 
+  // Her oyuncunun taş çekme durumunu takip et
+  const [hasDrawnTile, setHasDrawnTile] = useState({
+    0: false, // 3. Oyuncu
+    1: false, // 2. Oyuncu
+    2: true,  // 1. Oyuncu - Başlangıçta true olmalı ki taş çekemesin
+    3: false  // 4. Oyuncu
+  });
+
   const [gameState, setGameState] = useState(() => {
     const { playerTiles, remainingTiles } = distributeTiles();
     return {
@@ -93,13 +101,30 @@ function App() {
 
   // Sıradaki oyuncuya geç
   const nextPlayer = () => {
-    // Sıra değişimi (1 -> 2 -> 3 -> 4 -> 1)
     setCurrentPlayer(current => {
       const nextPlayer = current === 2 ? 1 : current === 1 ? 0 : current === 0 ? 3 : 2;
 
       // Eğer sıra tekrar 1. oyuncuya geliyorsa (yani bir tur tamamlandıysa)
       if (current === 3) {
-        setTurnCount(prev => prev + 1);
+        // Önce tur sayısını artır
+        setTurnCount(prev => {
+          const newTurnCount = prev + 1;
+
+          // Yeni oyuncunun taş çekme hakkını sıfırla
+          // İlk turda (turnCount === 0) ve ilk oyuncu (nextPlayer === 2) ise true, diğer durumlarda false
+          setHasDrawnTile(prevDrawn => ({
+            ...prevDrawn,
+            [nextPlayer]: nextPlayer === 2 && prev === 0 // Önceki tur sayısına göre kontrol et
+          }));
+
+          return newTurnCount;
+        });
+      } else {
+        // Tur tamamlanmadıysa normal şekilde taş çekme hakkını sıfırla
+        setHasDrawnTile(prev => ({
+          ...prev,
+          [nextPlayer]: false
+        }));
       }
 
       return nextPlayer;
@@ -120,6 +145,14 @@ function App() {
         remainingTiles,
         openTile: remainingTiles[0]
       });
+
+      // Yeni elde ilk oyuncu (1. Oyuncu, index: 2) taş çekemez
+      setHasDrawnTile({
+        0: false,
+        1: false,
+        2: true, // 1. Oyuncu başlangıçta 15 taşı olduğu için çekemez
+        3: false
+      });
     } else {
       // Oyun tamamen bitti
       console.log('Oyun bitti!');
@@ -128,6 +161,12 @@ function App() {
 
   // Yerden taş çekme işlemi
   const handleDrawTile = () => {
+    // Eğer oyuncu zaten taş çektiyse, işlemi engelle
+    if (hasDrawnTile[currentPlayer]) {
+      console.log('Bu turda zaten taş çektiniz!');
+      return;
+    }
+
     if (gameState.remainingTiles.length === 0) {
       console.log('Yerde taş kalmadı!');
       return;
@@ -139,8 +178,6 @@ function App() {
 
     // Çekilen taşı oyuncunun taşlarına ekle
     const newPlayerTiles = [...gameState.playerTiles];
-
-    // Boş bir slot bul
     const currentPlayerTiles = newPlayerTiles[currentPlayer];
     let emptySlotIndex = currentPlayerTiles.findIndex(tile => tile === null);
 
@@ -156,11 +193,14 @@ function App() {
       ...gameState,
       remainingTiles: newRemainingTiles,
       playerTiles: newPlayerTiles,
-      openTile: drawnTile // Çekilen taşı açık taş olarak göster
+      openTile: drawnTile // Çekilen taşı gösterge taşı olarak ayarla
     });
 
-    // Sıradaki oyuncuya geç
-    nextPlayer();
+    // Oyuncunun taş çektiğini kaydet
+    setHasDrawnTile(prev => ({
+      ...prev,
+      [currentPlayer]: true
+    }));
   };
 
   const handleTileClick = (playerIndex, tileIndex) => {
@@ -168,8 +208,17 @@ function App() {
   };
 
   const handleTileMove = (sourceIndex, targetIndex) => {
-    // Eğer targetIndex -1 ise, taş köşeye bırakılmıştır
+    // Eğer targetIndex -1 ise, taş köşeye bırakılmıştır (taş atma işlemi)
     if (targetIndex === -1) {
+      // İlk oyuncu ve ilk turda, direkt taş atabilir (taş çekme kontrolü yapılmaz)
+      const isFirstPlayerFirstTurn = currentPlayer === 2 && turnCount === 0;
+
+      // Eğer ilk oyuncunun ilk turu değilse ve oyuncu henüz taş çekmediyse, taş atamaz
+      if (!hasDrawnTile[currentPlayer] && !isFirstPlayerFirstTurn) {
+        console.log('Önce yerden taş çekmelisiniz!');
+        return;
+      }
+
       // Aktif oyuncunun taşlarını kopyala
       const currentPlayerTiles = [...gameState.playerTiles[currentPlayer]];
 
@@ -283,6 +332,7 @@ function App() {
         onDrawTile={handleDrawTile}
         openTile={gameState.openTile}
         gameRound={gameRound}
+        hasDrawnTile={hasDrawnTile}
       />
     </div>
   );

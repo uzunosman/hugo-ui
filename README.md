@@ -4,6 +4,13 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
 
 ## Özellikler
 
+### Oyun Akışı
+- Toplam 9 el oynanır
+- 1., 4. ve 9. eller Hugo elidir
+- Her el başında taşlar yeniden dağıtılır
+- İlk oyuncu (1. Oyuncu) 15 taş, diğer oyuncular 14'er taş alır
+- Oyun sırası saat yönünün tersine ilerler (1 -> 4 -> 3 -> 2 -> 1)
+
 ### Oyun Tahtası
 - Sabit boyutlu oyun alanı (720x720px)
 - Turkuaz renkli arka plan (#0097b2)
@@ -20,9 +27,18 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
   - Skor gösterimi
 - Konumlar:
   - Üst: 3. Oyuncu
-  - Sağ: 2. Oyuncu (sabit pozisyon)
-  - Alt: 1. Oyuncu
+  - Sağ: 2. Oyuncu
+  - Alt: 1. Oyuncu (Başlangıç oyuncusu)
   - Sol: 4. Oyuncu
+- Aktif oyuncu paneli kendi pozisyonunda görünür
+
+### Orta Alan
+- İki taş gösterimi:
+  - Sol: Kapalı taş (kalan taş sayısı sağ üst köşede gri daire içinde gösterilir)
+  - Sağ: Gösterge taşı (Hugo ellerinde yeşil "J", diğer ellerde açık taş)
+- El numarası göstergesi (örn: "5. El" veya "1. El (Hugo)")
+- Gösterge taşı sürüklenemez ve tıklanamaz
+- Kapalı taş sadece aktif oyuncu tarafından çekilebilir
 
 ### Süre Göstergesi
 - Her oyuncu için 60 saniyelik süre
@@ -58,12 +74,6 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
   - Tercih edilen yönde boşluk yoksa alternatif yöne kaydırma
   - Sağa/sola kaydırma için dinamik boşluk bulma
   - Taşların kaybolmasını önleyen güvenlik kontrolleri
-
-### Orta Alan
-- İki taş gösterimi
-  - Sol: Kapalı taş
-  - Sağ: Açık taş
-- 51 puan göstergesi
 
 ## Teknik Detaylar
 

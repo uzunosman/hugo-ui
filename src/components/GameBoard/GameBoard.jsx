@@ -12,7 +12,9 @@ const GameBoard = ({
     onTileMove,
     remainingTiles = [],
     onDrawTile,
-    openTile
+    openTile,
+    gameRound,
+    hasDrawnTile = {}
 }) => {
     const [timeLeft, setTimeLeft] = useState(60);
     const [cornerTiles, setCornerTiles] = useState({
@@ -70,27 +72,17 @@ const GameBoard = ({
 
     return (
         <>
-            {/* Player Panels - Aktif olmayan oyuncular */}
+            {/* Player Panels */}
             {players.map((player, index) => (
-                index === currentPlayer ? null : (
-                    <PlayerPanel
-                        key={index}
-                        name={player.name}
-                        score={player.score}
-                        position={['top', 'right', 'bottom', 'left'][index]}
-                        isCurrentPlayer={false}
-                    />
-                )
+                <PlayerPanel
+                    key={index}
+                    name={player.name}
+                    score={player.score}
+                    position={['top', 'right', 'bottom', 'left'][index]}
+                    isCurrentPlayer={index === currentPlayer}
+                    timeLeft={index === currentPlayer ? timeLeft : null}
+                />
             ))}
-
-            {/* Aktif Oyuncu Paneli - Her zaman altta */}
-            <PlayerPanel
-                name={players[currentPlayer].name}
-                score={players[currentPlayer].score}
-                position="current-player"
-                isCurrentPlayer={true}
-                timeLeft={timeLeft}
-            />
 
             <div className="game-board">
                 <div className="board-content">
@@ -120,12 +112,13 @@ const GameBoard = ({
                         onDrop={(e) => handleDrop(e, 'bottomRight')}
                     />
 
-                    {/* Center Area - Sadece aktif oyuncu taş çekebilir */}
+                    {/* Center Area */}
                     <CenterArea
                         remainingTiles={remainingTiles}
                         onDrawTile={onDrawTile}
-                        canDraw={true}
                         openTile={openTile}
+                        gameRound={gameRound}
+                        canDrawTile={!hasDrawnTile[currentPlayer]}
                     />
                 </div>
             </div>

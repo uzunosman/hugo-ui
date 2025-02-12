@@ -2,9 +2,9 @@ import React from 'react';
 import CenterTile from '../CenterTile/CenterTile';
 import '../../assets/css/components/CenterArea.css';
 
-const CenterArea = ({ remainingTiles = [], openTile = null, onDrawTile, gameRound = 1 }) => {
+const CenterArea = ({ remainingTiles = [], openTile = null, onDrawTile, gameRound = 1, canDrawTile = true }) => {
     const handleTileClick = () => {
-        if (remainingTiles.length > 0 && onDrawTile) {
+        if (remainingTiles.length > 0 && onDrawTile && canDrawTile) {
             onDrawTile();
         }
     };
@@ -17,13 +17,14 @@ const CenterArea = ({ remainingTiles = [], openTile = null, onDrawTile, gameRoun
             <div className="center-tiles">
                 {/* Kapalı deste - Sürüklenebilir */}
                 <div
-                    className="draggable-tile"
-                    draggable="true"
+                    className={`draggable-tile ${!canDrawTile ? 'disabled' : ''}`}
+                    draggable={canDrawTile}
                     onClick={handleTileClick}
                 >
                     <CenterTile
                         isClosed={true}
-                        remainingCount={remainingTiles.length}
+                        remainingCount={remainingTiles.length > 0 ? remainingTiles.length : null}
+                        isDisabled={!canDrawTile}
                     />
                 </div>
 
