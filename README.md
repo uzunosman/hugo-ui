@@ -92,6 +92,34 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
   - Taşlar orijinal boyutlarında (40x60px) görüntülenir
   - Atılan taşlar hafif saydam görünür (0.9 opaklık)
 
+## Multiplayer Özellikleri
+
+### Oda Sistemi
+- Birden fazla oyun odası desteği
+- Her odada maksimum 4 oyuncu
+- Oda listesi ve filtreleme
+- Oda oluşturma ve katılma
+- Oyuncu hazır durumu kontrolü
+
+### Gerçek Zamanlı Oyun
+- WebSocket tabanlı iletişim
+- Anlık taş hareketleri senkronizasyonu
+- Oyuncu sırası takibi
+- Atılan taşların tüm oyunculara gösterimi
+- Oyun durumu senkronizasyonu
+
+### Oyuncu Eşleştirme
+- Oda bazlı eşleştirme
+- 4 oyuncu hazır olduğunda otomatik başlatma
+- Oyuncu ayrılma durumu yönetimi
+- Yeniden bağlanma desteği
+
+### Güvenlik
+- Oyuncu kimlik doğrulama
+- Taş hareketleri validasyonu
+- Hile önleme mekanizmaları
+- Bağlantı kopması durumu yönetimi
+
 ## Teknik Detaylar
 
 ### CSS Yapısı
