@@ -78,7 +78,7 @@ const GameBoard = ({
                     key={index}
                     name={player.name}
                     score={player.score}
-                    position={['top', 'right', 'bottom', 'left'][index]}
+                    position={index === 2 ? 'current-player' : ['top', 'right', 'left'][index === 3 ? 2 : index]}
                     isCurrentPlayer={index === currentPlayer}
                     timeLeft={index === currentPlayer ? timeLeft : null}
                 />

@@ -12,13 +12,44 @@
     gap: var(--spacing-md);
 }
 
+/* Temel timer-bar stili */
 .player-panel .timer-bar {
     position: absolute;
-    top: 0;
-    left: 0;
-    height: 3px;
     background-color: #4CAF50;
     transition: all 1s linear;
+}
+
+/* 1. oyuncu (current-player) için timer-bar */
+.player-panel.current-player .timer-bar {
+    top: 0;
+    left: 0;
+    width: var(--timer-progress, 100%);
+    height: 3px;
+}
+
+/* 3. oyuncu (top) için timer-bar */
+.player-panel.top .timer-bar {
+    bottom: 0;
+    left: 0;
+    width: var(--timer-progress, 100%);
+    height: 3px;
+}
+
+/* 2. oyuncu (right) için timer-bar */
+.player-panel.right .timer-bar {
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: var(--timer-progress, 100%);
+}
+
+/* 4. oyuncu (left) için timer-bar */
+.player-panel.left .timer-bar {
+    top: 0;
+    right: 0;
+    left: auto;
+    width: 3px;
+    height: var(--timer-progress, 100%);
 }
 
 .player-panel .timer-bar.warning {
@@ -27,7 +58,7 @@
 
 .player-panel.current-player {
     position: fixed;
-    bottom: 160px;
+    bottom: calc(160px + 1px);
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(128, 128, 128, 0.9);
@@ -50,24 +81,12 @@
     padding: var(--spacing-md) 5px;
 }
 
-.player-panel.right .timer-bar {
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-}
-
 .player-panel.right .player-info {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     text-align: center;
     height: 100%;
-}
-
-.player-panel.bottom {
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: var(--spacing-sm);
 }
 
 .player-panel.left {
@@ -80,17 +99,11 @@
     padding: var(--spacing-md) 5px;
 }
 
-.player-panel.left .timer-bar {
-    top: 0;
-    right: 0;
-    width: 3px;
-    height: 100%;
-}
-
 .player-panel.left .player-info {
     writing-mode: vertical-lr;
     text-align: center;
     height: 100%;
+    margin-top: var(--spacing-sm);
 }
 
 .player-avatar {

@@ -2,25 +2,19 @@ import React from 'react';
 import '../../assets/css/components/PlayerPanel.css';
 
 const PlayerPanel = ({ name, score, position, isCurrentPlayer, timeLeft }) => {
-    const getTimerWidth = () => {
+    const getTimerProgress = () => {
         if (!isCurrentPlayer || !timeLeft) return 0;
-
-        // Yatay paneller için genişlik yüzdesi
-        if (position === 'top' || position === 'bottom' || position === 'current-player') {
-            return `${(timeLeft / 60) * 100}%`;
-        }
-        // Dikey paneller için yükseklik yüzdesi
-        return '100%';
+        return (timeLeft / 60) * 100;
     };
 
     const isWarning = timeLeft <= 20;
+    const progress = getTimerProgress();
 
     return (
-        <div className={`player-panel ${position}`}>
+        <div className={`player-panel ${position}`} style={{ '--timer-progress': `${progress}%` }}>
             {isCurrentPlayer && (
                 <div
                     className={`timer-bar ${isWarning ? 'warning' : ''}`}
-                    style={{ width: getTimerWidth() }}
                 />
             )}
             <div className="player-avatar" />
