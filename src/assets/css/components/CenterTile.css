@@ -1,3 +1,10 @@
+.tile-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .center-tile {
     width: 25px;
     height: 36px;
@@ -16,7 +23,7 @@
     padding-bottom: 8px;
 }
 
-.center-tile:not(.closed)::after {
+.center-tile:not(.closed):not(.indicator)::after {
     content: '';
     position: absolute;
     bottom: 4px;
@@ -31,11 +38,13 @@
     justify-content: center;
     align-items: center;
     padding-bottom: 0;
+    cursor: pointer;
 }
 
-.center-tile.closed::before {
-    content: '48';
+.remaining-count {
     position: absolute;
+    top: -8px;
+    right: -8px;
     width: 16px;
     height: 16px;
     background-color: #e0e0e0;
@@ -45,6 +54,20 @@
     align-items: center;
     font-size: 10px;
     color: #666;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.center-tile.indicator {
+    border: 2px solid #4CAF50;
+    cursor: not-allowed;
+    transform: scale(1.1);
+}
+
+.center-tile.indicator.green {
+    border-color: #4CAF50;
+    color: #4CAF50;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -78,4 +101,17 @@
 
 .center-tile.yellow:not(.closed)::after {
     background-color: #FFC107;
+}
+
+.draggable-tile {
+    cursor: grab;
+}
+
+.draggable-tile:active {
+    cursor: grabbing;
+}
+
+.indicator-tile {
+    pointer-events: none;
+    margin-left: var(--spacing-sm);
 }

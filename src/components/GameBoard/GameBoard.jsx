@@ -9,9 +9,18 @@ const GameBoard = ({
     currentPlayer,
     playerTiles,
     onTileClick,
-    onTileMove
+    onTileMove,
+    remainingTiles = [],
+    onDrawTile,
+    openTile
 }) => {
     const [timeLeft, setTimeLeft] = useState(60);
+    const [cornerTiles, setCornerTiles] = useState({
+        topLeft: null,
+        topRight: null,
+        bottomLeft: null,
+        bottomRight: null
+    });
 
     useEffect(() => {
         // Oyuncu değiştiğinde süreyi sıfırla
@@ -31,9 +40,37 @@ const GameBoard = ({
         return () => clearInterval(timer);
     }, [currentPlayer]);
 
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('drag-over');
+    };
+
+    const handleDragLeave = (e) => {
+        e.currentTarget.classList.remove('drag-over');
+    };
+
+    const handleDrop = (e, corner) => {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+
+        try {
+            const tileData = JSON.parse(e.dataTransfer.getData('tile'));
+            setCornerTiles(prev => ({
+                ...prev,
+                [corner]: tileData
+            }));
+
+            // Taş bırakıldığında sırayı değiştir
+            onTileMove(tileData.sourceIndex, -1); // -1, taşın köşeye bırakıldığını belirtir
+        } catch (error) {
+            console.error('Taş bırakma sırasında hata:', error);
+        }
+    };
+
     return (
         <>
-            {/* Player Panels */}
+            {/* Player Panels - Aktif olmayan oyuncular */}
             {players.map((player, index) => (
                 index === currentPlayer ? null : (
                     <PlayerPanel
@@ -46,7 +83,7 @@ const GameBoard = ({
                 )
             ))}
 
-            {/* Current Player Panel */}
+            {/* Aktif Oyuncu Paneli - Her zaman altta */}
             <PlayerPanel
                 name={players[currentPlayer].name}
                 score={players[currentPlayer].score}
@@ -57,8 +94,39 @@ const GameBoard = ({
 
             <div className="game-board">
                 <div className="board-content">
-                    {/* Center Area */}
-                    <CenterArea />
+                    {/* Köşe Bırakma Alanları */}
+                    <div
+                        className="tile-drop-zone top-left"
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, 'topLeft')}
+                    />
+                    <div
+                        className="tile-drop-zone top-right"
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, 'topRight')}
+                    />
+                    <div
+                        className="tile-drop-zone bottom-left"
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, 'bottomLeft')}
+                    />
+                    <div
+                        className="tile-drop-zone bottom-right"
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, 'bottomRight')}
+                    />
+
+                    {/* Center Area - Sadece aktif oyuncu taş çekebilir */}
+                    <CenterArea
+                        remainingTiles={remainingTiles}
+                        onDrawTile={onDrawTile}
+                        canDraw={true}
+                        openTile={openTile}
+                    />
                 </div>
             </div>
 

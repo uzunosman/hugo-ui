@@ -2,23 +2,56 @@ import React from 'react';
 import CenterTile from '../CenterTile/CenterTile';
 import '../../assets/css/components/CenterArea.css';
 
-const CenterArea = () => {
-    const centerTiles = [
-        { value: '', color: 'black', isClosed: true },
-        { value: '3', color: 'red', isClosed: false }
-    ];
+const CenterArea = ({ remainingTiles = [], openTile = null, onDrawTile, gameRound = 1 }) => {
+    const handleTileClick = () => {
+        if (remainingTiles.length > 0 && onDrawTile) {
+            onDrawTile();
+        }
+    };
+
+    // Hugo eli kontrolü (1, 4, 9. eller)
+    const isHugoRound = [1, 4, 9].includes(gameRound);
 
     return (
         <div className="center-area">
             <div className="center-tiles">
-                {centerTiles.map((tile, index) => (
+                {/* Kapalı deste - Sürüklenebilir */}
+                <div
+                    className="draggable-tile"
+                    draggable="true"
+                    onClick={handleTileClick}
+                >
                     <CenterTile
-                        key={index}
-                        value={tile.value}
-                        color={tile.color}
-                        isClosed={tile.isClosed}
+                        isClosed={true}
+                        remainingCount={remainingTiles.length}
                     />
-                ))}
+                </div>
+
+                {/* Gösterge taşı - Sürüklenemez ve tıklanamaz */}
+                <div className="indicator-tile">
+                    {isHugoRound ? (
+                        <CenterTile
+                            value="J"
+                            color="green"
+                            isClosed={false}
+                            isIndicator={true}
+                        />
+                    ) : (
+                        openTile && (
+                            <CenterTile
+                                value={openTile.value}
+                                color={openTile.color}
+                                isClosed={false}
+                                isIndicator={true}
+                            />
+                        )
+                    )}
+                </div>
+            </div>
+
+            {/* El numarası göstergesi */}
+            <div className="round-indicator">
+                {gameRound}. El {isHugoRound && '(Hugo)'}
             </div>
         </div>
     );

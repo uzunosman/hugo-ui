@@ -21,6 +21,43 @@
     align-items: center;
 }
 
+.tile-drop-zone {
+    position: absolute;
+    width: 40px;
+    height: 60px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.tile-drop-zone.drag-over {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.tile-drop-zone.top-left {
+    top: 20px;
+    left: 20px;
+}
+
+.tile-drop-zone.top-right {
+    top: 20px;
+    right: 20px;
+}
+
+.tile-drop-zone.bottom-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+.tile-drop-zone.bottom-right {
+    bottom: 20px;
+    right: 20px;
+}
+
 .game-info {
     position: absolute;
     top: var(--spacing-sm);

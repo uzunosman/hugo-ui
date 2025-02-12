@@ -13,10 +13,18 @@
     display: flex;
     gap: var(--spacing-xs);
     padding: var(--spacing-lg);
-
     justify-content: center;
     align-items: center;
+}
 
+.round-indicator {
+    background-color: var(--panel-bg);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 12px;
+    color: var(--tile-bg);
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .score-display {
