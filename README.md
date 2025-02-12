@@ -75,6 +75,23 @@ Hugo, 51 puanlık bir Okey 101 varyasyonu için geliştirilen modern web arayüz
   - Sağa/sola kaydırma için dinamik boşluk bulma
   - Taşların kaybolmasını önleyen güvenlik kontrolleri
 
+### Taş Atma Mekanizması
+- Her oyuncu sadece kendi köşesine taş atabilir:
+  - 3. Oyuncu -> Sol üst köşe
+  - 2. Oyuncu -> Sağ üst köşe
+  - 1. Oyuncu -> Sağ alt köşe
+  - 4. Oyuncu -> Sol alt köşe
+- Köşe bırakma alanları:
+  - Tüm köşelerde görünür
+  - Aktif oyuncunun köşesi belirgin ve kullanılabilir
+  - Diğer köşeler soluk ve pasif
+  - Taş sürüklendiğinde sadece aktif köşe tepki verir
+- Atılan taşlar:
+  - Her köşede sadece son atılan taş görünür
+  - Önceki atılan taşlar listede tutulur
+  - Taşlar orijinal boyutlarında (40x60px) görüntülenir
+  - Atılan taşlar hafif saydam görünür (0.9 opaklık)
+
 ## Teknik Detaylar
 
 ### CSS Yapısı

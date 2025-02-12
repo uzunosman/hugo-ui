@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PlayerPanel from '../PlayerPanel/PlayerPanel';
 import TileHolder from '../TileHolder/TileHolder';
 import CenterArea from '../CenterArea/CenterArea';
+import Tile from '../Tile/Tile';
 import '../../assets/css/components/GameBoard.css';
 
 const GameBoard = ({
@@ -10,19 +11,14 @@ const GameBoard = ({
     playerTiles,
     onTileClick,
     onTileMove,
-    remainingTiles = [],
+    remainingTiles,
     onDrawTile,
     openTile,
     gameRound,
-    hasDrawnTile = {}
+    hasDrawnTile,
+    discardedTiles
 }) => {
     const [timeLeft, setTimeLeft] = useState(60);
-    const [cornerTiles, setCornerTiles] = useState({
-        topLeft: null,
-        topRight: null,
-        bottomLeft: null,
-        bottomRight: null
-    });
 
     useEffect(() => {
         // Oyuncu değiştiğinde süreyi sıfırla
@@ -42,6 +38,17 @@ const GameBoard = ({
         return () => clearInterval(timer);
     }, [currentPlayer]);
 
+    // Oyuncunun köşesini belirle
+    const getPlayerCorner = (playerIndex) => {
+        const cornerMap = {
+            0: 'topLeft',     // 3. oyuncu
+            1: 'topRight',    // 2. oyuncu
+            2: 'bottomRight', // 1. oyuncu
+            3: 'bottomLeft'   // 4. oyuncu
+        };
+        return cornerMap[playerIndex];
+    };
+
     const handleDragOver = (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
@@ -56,18 +63,40 @@ const GameBoard = ({
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
 
+        // Oyuncunun kendi köşesi değilse, taş bırakılamaz
+        const playerCorner = getPlayerCorner(currentPlayer);
+        if (corner !== playerCorner) {
+            console.log('Bu köşeye taş bırakamazsınız!');
+            return;
+        }
+
         try {
             const tileData = JSON.parse(e.dataTransfer.getData('tile'));
-            setCornerTiles(prev => ({
-                ...prev,
-                [corner]: tileData
-            }));
-
-            // Taş bırakıldığında sırayı değiştir
-            onTileMove(tileData.sourceIndex, -1); // -1, taşın köşeye bırakıldığını belirtir
+            onTileMove(tileData.sourceIndex, -1);
         } catch (error) {
             console.error('Taş bırakma sırasında hata:', error);
         }
+    };
+
+    // Atılan taşları render et
+    const renderDiscardedTiles = (corner) => {
+        const tiles = discardedTiles[corner];
+        if (tiles.length === 0) return null;
+
+        // Sadece son atılan taşı göster
+        const lastTile = tiles[tiles.length - 1];
+        return (
+            <div
+                key={`${corner}-last`}
+                className={`discarded-tile ${corner}`}
+            >
+                <Tile
+                    value={lastTile.value}
+                    color={lastTile.color}
+                    isDiscarded={true}
+                />
+            </div>
+        );
     };
 
     return (
@@ -88,29 +117,45 @@ const GameBoard = ({
                 <div className="board-content">
                     {/* Köşe Bırakma Alanları */}
                     <div
-                        className="tile-drop-zone top-left"
+                        className={`tile-drop-zone top-left ${getPlayerCorner(currentPlayer) === 'topLeft' ? 'active' : ''}`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, 'topLeft')}
                     />
                     <div
-                        className="tile-drop-zone top-right"
+                        className={`tile-drop-zone top-right ${getPlayerCorner(currentPlayer) === 'topRight' ? 'active' : ''}`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, 'topRight')}
                     />
                     <div
-                        className="tile-drop-zone bottom-left"
+                        className={`tile-drop-zone bottom-left ${getPlayerCorner(currentPlayer) === 'bottomLeft' ? 'active' : ''}`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, 'bottomLeft')}
                     />
                     <div
-                        className="tile-drop-zone bottom-right"
+                        className={`tile-drop-zone bottom-right ${getPlayerCorner(currentPlayer) === 'bottomRight' ? 'active' : ''}`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, 'bottomRight')}
                     />
+
+                    {/* Atılan taşlar */}
+                    <div className="discarded-tiles-container">
+                        <div className="discarded-tiles top-left">
+                            {renderDiscardedTiles('topLeft')}
+                        </div>
+                        <div className="discarded-tiles top-right">
+                            {renderDiscardedTiles('topRight')}
+                        </div>
+                        <div className="discarded-tiles bottom-left">
+                            {renderDiscardedTiles('bottomLeft')}
+                        </div>
+                        <div className="discarded-tiles bottom-right">
+                            {renderDiscardedTiles('bottomRight')}
+                        </div>
+                    </div>
 
                     {/* Center Area */}
                     <CenterArea

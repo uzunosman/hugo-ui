@@ -90,6 +90,14 @@ function App() {
     3: false  // 4. Oyuncu
   });
 
+  // Köşelere atılan taşları takip et
+  const [discardedTiles, setDiscardedTiles] = useState({
+    topLeft: [],
+    topRight: [],
+    bottomLeft: [],
+    bottomRight: []
+  });
+
   const [gameState, setGameState] = useState(() => {
     const { playerTiles, remainingTiles } = distributeTiles();
     return {
@@ -221,6 +229,7 @@ function App() {
 
       // Aktif oyuncunun taşlarını kopyala
       const currentPlayerTiles = [...gameState.playerTiles[currentPlayer]];
+      const discardedTile = { ...currentPlayerTiles[sourceIndex] };
 
       // Sürüklenen taşı kaldır
       currentPlayerTiles[sourceIndex] = null;
@@ -232,6 +241,25 @@ function App() {
         ...gameState,
         playerTiles: newPlayerTiles
       });
+
+      // Atılan taşı uygun köşeye ekle
+      // Oyuncu indeksine göre köşe belirle:
+      // 0 (3. oyuncu) -> topLeft
+      // 1 (2. oyuncu) -> topRight
+      // 2 (1. oyuncu) -> bottomRight
+      // 3 (4. oyuncu) -> bottomLeft
+      const cornerMap = {
+        0: 'topLeft',
+        1: 'topRight',
+        2: 'bottomRight',
+        3: 'bottomLeft'
+      };
+
+      const corner = cornerMap[currentPlayer];
+      setDiscardedTiles(prev => ({
+        ...prev,
+        [corner]: [...prev[corner], discardedTile]
+      }));
 
       // Sırayı değiştir
       nextPlayer();
@@ -333,6 +361,7 @@ function App() {
         openTile={gameState.openTile}
         gameRound={gameRound}
         hasDrawnTile={hasDrawnTile}
+        discardedTiles={discardedTiles}
       />
     </div>
   );
