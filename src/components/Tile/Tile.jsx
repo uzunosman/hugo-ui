@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/css/components/Tile.css';
 
-const Tile = ({ value, color, onClick, index }) => {
+const Tile = ({ value, color, onClick, index, isJoker, isOkey }) => {
     const handleDragStart = (e) => {
         try {
             const rect = e.target.getBoundingClientRect();
@@ -12,7 +12,9 @@ const Tile = ({ value, color, onClick, index }) => {
             const tileData = {
                 value,
                 color,
-                sourceIndex: index
+                sourceIndex: index,
+                isJoker,
+                isOkey
             };
             e.dataTransfer.setData('tile', JSON.stringify(tileData));
 
@@ -51,14 +53,17 @@ const Tile = ({ value, color, onClick, index }) => {
 
     return (
         <div
-            className={`tile ${color}`}
+            className={`tile ${color} ${isOkey ? 'okey' : ''} ${isJoker ? 'joker' : ''}`}
             onClick={handleClick}
             draggable="true"
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             data-index={index}
         >
-            {value}
+            {isJoker ? 'J' : value}
+            {isOkey && (
+                <span className="okey-star">★</span>
+            )}
         </div>
     );
 };

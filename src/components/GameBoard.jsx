@@ -1,71 +1,138 @@
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import React, { useState, useEffect } from 'react';
+import { gameService } from '../services/gameService';
 import PlayerPanel from './PlayerPanel';
+import TileHolder from './TileHolder';
 import CenterArea from './CenterArea';
-import PlayerTiles from './PlayerTiles';
 
-const GameBoard = ({
-    players,
-    currentPlayer,
-    playerTiles,
-    remainingTiles,
-    onTileClick,
-    onTileMove,
-    onDrawTile,
-    openTile,
-    gameRound,
-    hasDrawnTile,
-    discardedTiles
-}) => {
+const GameBoard = () => {
+    const [gameState, setGameState] = useState(null);
+    const [playerName, setPlayerName] = useState('');
+    const [gameId, setGameId] = useState('');
+    const [error, setError] = useState('');
 
-    const renderDiscardedTiles = (corner) => {
-        return discardedTiles[corner].map((tile, index) => (
-            <div
-                key={`${corner}-${index}`}
-                className={`discarded-tile ${corner}`}
-                style={{
-                    backgroundColor: tile.color,
-                    transform: `rotate(${tile.rotation}deg)`
-                }}
-            >
-                {tile.number}
-            </div>
-        ));
+    useEffect(() => {
+        // SignalR bağlantısını başlat
+        gameService.start();
+
+        // Oyun olaylarını dinle
+        gameService.onGameStateUpdated((state) => {
+            setGameState(state);
+            setError('');
+        });
+
+        gameService.onError((message) => {
+            setError(message);
+        });
+
+        return () => {
+            // Bileşen unmount olduğunda bağlantıyı kapat
+            gameService.connection.stop();
+        };
+    }, []);
+
+    const handleCreateGame = async () => {
+        try {
+            await gameService.createGame(playerName);
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="game-board">
-                {/* Köşelere atılan taşlar */}
-                <div className="discarded-tiles-container">
-                    <div className="discarded-tiles top-left">{renderDiscardedTiles('topLeft')}</div>
-                    <div className="discarded-tiles top-right">{renderDiscardedTiles('topRight')}</div>
-                    <div className="discarded-tiles bottom-left">{renderDiscardedTiles('bottomLeft')}</div>
-                    <div className="discarded-tiles bottom-right">{renderDiscardedTiles('bottomRight')}</div>
+    const handleJoinGame = async () => {
+        try {
+            await gameService.joinGame(gameId, playerName);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleDrawStone = async () => {
+        try {
+            await gameService.drawStone();
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleThrowStone = async (stone) => {
+        try {
+            await gameService.throwStone(stone);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    if (!gameState) {
+        return (
+            <div className="game-setup">
+                <h2>Hugo Oyunu</h2>
+                {error && <div className="error">{error}</div>}
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Oyuncu Adı"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                    />
+                    <button onClick={handleCreateGame}>Yeni Oyun Oluştur</button>
                 </div>
-
-                {/* Mevcut içerik */}
-                <PlayerPanel position="top" player={players[0]} isCurrentPlayer={currentPlayer === 0} />
-                <PlayerPanel position="right" player={players[1]} isCurrentPlayer={currentPlayer === 1} />
-                <PlayerPanel position="left" player={players[3]} isCurrentPlayer={currentPlayer === 3} />
-                <PlayerPanel position="current-player" player={players[2]} isCurrentPlayer={currentPlayer === 2} />
-
-                <CenterArea
-                    remainingTiles={remainingTiles}
-                    onDrawTile={onDrawTile}
-                    openTile={openTile}
-                    currentPlayer={currentPlayer}
-                    gameRound={gameRound}
-                    hasDrawnTile={hasDrawnTile}
-                />
-
-                <PlayerTiles
-                    tiles={playerTiles[currentPlayer]}
-                    onTileClick={onTileClick}
-                    onTileMove={onTileMove}
-                />
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Oyun ID"
+                        value={gameId}
+                        onChange={(e) => setGameId(e.target.value)}
+                    />
+                    <button onClick={handleJoinGame}>Oyuna Katıl</button>
+                </div>
             </div>
-        </DndProvider>
+        );
+    }
+
+    return (
+        <div className="game-board">
+            {error && <div className="error">{error}</div>}
+
+            {/* Oyuncu Panelleri */}
+            {gameState.otherPlayers.map((player, index) => (
+                <PlayerPanel
+                    key={index}
+                    name={player.name}
+                    stoneCount={player.stoneCount}
+                    isCurrentPlayer={false}
+                    position={index}
+                />
+            ))}
+
+            {/* Merkez Alan */}
+            <CenterArea
+                okeyStone={gameState.okeyStone}
+                isHugoTurn={gameState.isHugoTurn}
+                currentTurn={gameState.currentTurn}
+                onDrawStone={handleDrawStone}
+                canDrawStone={gameState.currentPlayer}
+            />
+
+            {/* Oyuncunun Taşları */}
+            <TileHolder
+                stones={gameState.yourStones}
+                onThrowStone={handleThrowStone}
+                isCurrentPlayer={gameState.currentPlayer}
+            />
+
+            {/* Açılan Perler */}
+            <div className="opened-pers">
+                {gameState.openedPers.map((per, index) => (
+                    <div key={index} className="per">
+                        {per.stones.map((stone, i) => (
+                            <div key={i} className="stone">
+                                {stone.number} - {stone.color}
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 
