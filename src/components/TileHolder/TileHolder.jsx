@@ -41,7 +41,7 @@ const TileHolder = ({ tiles, onTileClick, onTileMove }) => {
 
         try {
             if (cell) {
-                const tileData = JSON.parse(e.dataTransfer.getData('tile'));
+                const tileData = JSON.parse(e.dataTransfer.getData('text/plain'));
                 let targetIndex = parseInt(cell.dataset.index);
 
                 // İkinci satır için offset ekle
@@ -50,7 +50,9 @@ const TileHolder = ({ tiles, onTileClick, onTileMove }) => {
                 }
 
                 // Taşı hareket ettir
-                onTileMove(tileData.sourceIndex, targetIndex);
+                if (onTileMove) {
+                    onTileMove(tileData.sourceIndex, targetIndex);
+                }
             }
         } catch (error) {
             console.error('Taş taşıma sırasında hata:', error);

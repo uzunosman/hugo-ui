@@ -5,20 +5,15 @@ const Tile = ({ value, color, onClick, index, isJoker, isOkey }) => {
     const handleDragStart = (e) => {
         try {
             const rect = e.target.getBoundingClientRect();
-            // Mouse'u taşın merkezine konumlandır
             e.dataTransfer.setDragImage(e.target, rect.width / 2, rect.height / 2);
 
-            // Sürüklenen taşın bilgilerini saklayalım
             const tileData = {
-                value,
-                color,
-                sourceIndex: index,
-                isJoker,
-                isOkey
+                number: value,
+                color: color,
+                isJoker: isJoker,
+                isOkey: isOkey
             };
-            e.dataTransfer.setData('tile', JSON.stringify(tileData));
-
-            // Sürükleme sırasında görsel geri bildirim
+            e.dataTransfer.setData('text/plain', JSON.stringify(tileData));
             e.target.style.opacity = '0.5';
         } catch (error) {
             console.error('Sürükleme başlatılırken hata:', error);
@@ -53,14 +48,14 @@ const Tile = ({ value, color, onClick, index, isJoker, isOkey }) => {
 
     return (
         <div
-            className={`tile ${color} ${isOkey ? 'okey' : ''} ${isJoker ? 'joker' : ''}`}
+            className={`tile ${color?.toLowerCase() || ''} ${isJoker ? 'joker' : ''} ${isOkey ? 'okey' : ''}`}
             onClick={handleClick}
-            draggable="true"
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            draggable={true}
             data-index={index}
         >
-            {isJoker ? 'J' : value}
+            <span className="tile-value">{value}</span>
             {isOkey && (
                 <span className="okey-star">★</span>
             )}

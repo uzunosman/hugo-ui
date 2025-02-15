@@ -74,7 +74,7 @@
 .player-panel.right {
     position: fixed;
     right: 0;
-    top: 200px;
+    top: 25%;
     height: 200px;
     width: 30px;
     flex-direction: column;
@@ -91,7 +91,7 @@
 
 .player-panel.left {
     left: 0;
-    top: 40%;
+    top: 42%;
     transform: translateY(-50%);
     height: 200px;
     width: 30px;
@@ -131,4 +131,13 @@
     justify-content: center;
     align-items: center;
     gap: 2px;
+}
+
+/* Alt oyuncu için özel stil */
+.player-panel.bottom {
+    bottom: calc(160px + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(128, 128, 128, 0.9);
+    z-index: 10;
 }
